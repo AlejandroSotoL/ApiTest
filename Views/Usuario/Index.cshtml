@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+ <div class="bg-white p-8 rounded-2xl shadow-2xl w-96">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
+
+        <form id="loginForm" class="space-y-5">
+            <div>
+                <label class="block text-gray-600">Usuario</label>
+                <input  type="text" name="Username"
+                       class="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                       placeholder="Ingresa tu usuario"  />
+            </div>
+
+            <div>
+                <label class="block text-gray-600">Contraseña</label>
+                <input  type="password" name="Password"
+                       class="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                       placeholder="••••••••"  />
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-indigo-600 text-white p-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                Ingresar
+            </button>
+        </form>
+
+    </div>
+
+        <div id="mensaje" class="text-center mt-4 text-sm font-medium"></div>
+    <script>
+        const form = document.getElementById("loginForm");
+        const mensaje = document.getElementById("mensaje");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+
+            try {
+                const response = await fetch("/api/Usuario/Login", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    @* mensaje.textContent = result.message; *@
+                    mensaje.innerHTML = result.message;
+                    mensaje.className = "text-green-600 text-center mt-4";
+                } else {
+                    @* mensaje.textContent = result.message; *@
+                    mensaje.innerHTML = result.message;
+                    mensaje.className = "text-red-600 text-center mt-4";
+                }
+
+            } catch (error) {
+                mensaje.textContent = "Error en la conexión";
+                mensaje.className = "text-red-600 text-center mt-4";
+            }
+        });
+    </script>
