@@ -25,14 +25,14 @@ namespace ApiTest.Controllers
         public IActionResult Login([FromBody] LoginDto dto)
         {
             
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToList();
-                return BadRequest(new { success = false, errors });
-            }
+            // if (!ModelState.IsValid)
+            // {
+            //     var errors = ModelState.Values
+            //         .SelectMany(v => v.Errors)
+            //         .Select(e => e.ErrorMessage)
+            //         .ToList();
+            //     return BadRequest(new { success = false, errors });
+            // }
             using (SqlConnection conn = new SqlConnection("Server=DESKTOP-P657RHG\\SQL2016;Database=ApiTest;Trusted_Connection=True;TrustServerCertificate=True;"))
             {
                 string query = $"SELECT * FROM Usuarios WHERE Username = '{dto.Username}' AND Password = '{dto.Password}'";

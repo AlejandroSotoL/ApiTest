@@ -10,15 +10,15 @@
         <div>
             <div
                 class="flex items-center gap-4 bg-[#10243c] p-3 text-white rounded-md focus-within:ring-2 focus-within:ring-cyan-400">
-                <i class="material-icons text-gray-300">person</i>
+                <i class="material-icons text-gray-300">lock</i>
         
                 <input type="text" name="Username" placeholder="Usuario"
                        class="w-full bg-transparent outline-none border-none text-white placeholder-gray-400" />
             </div>
 
             <span data-for="Username" class="text-red-500 text-xs mt-1 block"></span>
+            
         </div>
-
         <div>
             <div
                 class="flex items-center gap-4 bg-[#10243c] p-3 text-white rounded-md focus-within:ring-2 focus-within:ring-cyan-400">
@@ -51,62 +51,6 @@
 </div>
 
 
-
-
-
-
 @section Scripts {
-    <script>
-        const form = document.getElementById("loginForm");
-        const mensaje = document.getElementById("mensaje");
-
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            mensaje.textContent = "";
-            form.querySelectorAll('span[data-for]').forEach(el => el.textContent = "");
-            const data = {
-                Username: form.querySelector('input[name="Username"]').value,
-                Password: form.querySelector('input[name="Password"]').value
-            };
-
-            try {
-                const response = await fetch("/api/UsuarioApi/Login", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    mensaje.innerHTML = result.message;
-                    mensaje.className = "text-green-600 text-center mt-4 font-bold";
-                } else {
-                    mensaje.innerHTML = result.message || "Datos inválidos";
-                    mensaje.className = "text-red-600 text-center mt-4";
-
-                    if (result.errors) {
-                        // 2. Mapear errores dinámicamente
-                        result.errors.forEach(err => {
-                            // Convertimos a minúsculas para comparar fácilmente
-                            const errorMsg = err.toLowerCase();
-                            
-                            if (errorMsg.includes("username") || errorMsg.includes("usuario")) {
-                                const span = form.querySelector('span[data-for="Username"]');
-                                if (span) span.textContent = err;
-                            }
-                            if (errorMsg.includes("password") || errorMsg.includes("contraseña")) {
-                                const span = form.querySelector('span[data-for="Password"]');
-                                if (span) span.textContent = err;
-                            }
-                        });
-                    }
-                }
-
-            } catch (error) {
-                mensaje.textContent = "Error en la conexión";
-                mensaje.className = "text-red-600 text-center mt-4";
-            }
-        });
-    </script>
+    <script src="~/js/index.js"></script>
 }
