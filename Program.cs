@@ -1,9 +1,14 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 👇 Agregar servicios MVC y API
 builder.Services.AddControllersWithViews();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.AddEndpointsApiExplorer(); // Necesario para Swagger
 builder.Services.AddSwaggerGen(c =>
 {
@@ -19,7 +24,6 @@ var app = builder.Build();
 
 
 
-app.UseHttpsRedirection();
 app.UseStaticFiles(); // Para css, js, imagenes
 app.UseRouting();
 

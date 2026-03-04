@@ -2,58 +2,105 @@
     ViewData["Title"] = "Home Page";
 }
 
- <div class="bg-white p-8 rounded-2xl shadow-2xl w-96">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
+<div
+    class="bg-gradient-to-br from-[#1a567b] via-[#1a567b]/90 to-[#1a567b]/80  p-8 rounded-4xl border-2 border-[#20a9e5] shadow-2xl w-96">
+    <h2 class="text-2xl font-bold text-center text-white mb-20 mt-10">Iniciar Sesión</h2>
 
-        <form id="loginForm" class="space-y-5">
-            <div>
-                <label class="block text-gray-600">Usuario</label>
-                <input  type="text" name="Username"
-                       class="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                       placeholder="Ingresa tu usuario"  />
+    <form id="loginForm" class="space-y-5">
+        <div>
+            <div
+                class="flex items-center gap-4 bg-[#10243c] p-3 text-white rounded-md focus-within:ring-2 focus-within:ring-cyan-400">
+                <i class="material-icons text-gray-300">person</i>
+        
+                <input type="text" name="Username" placeholder="Usuario"
+                       class="w-full bg-transparent outline-none border-none text-white placeholder-gray-400" />
             </div>
 
-            <div>
-                <label class="block text-gray-600">Contraseña</label>
-                <input  type="password" name="Password"
-                       class="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                       placeholder="••••••••"  />
+            <span data-for="Username" class="text-red-500 text-xs mt-1 block"></span>
+        </div>
+
+        <div>
+            <div
+                class="flex items-center gap-4 bg-[#10243c] p-3 text-white rounded-md focus-within:ring-2 focus-within:ring-cyan-400">
+                <i class="material-icons text-gray-300">lock</i>
+        
+                <input type="password" name="Password" placeholder="********"
+                       class="w-full bg-transparent outline-none border-none text-white placeholder-gray-400" />
             </div>
 
-            <button type="submit"
-                    class="w-full bg-indigo-600 text-white p-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
-                Ingresar
-            </button>
-        </form>
+            <span data-for="Password" class="text-red-500 text-xs mt-1 block"></span>
+            
+        </div>
+        <div class="flex justify-between text-sm text-white my-10">
+            <div>
+                <input type="checkbox" name="Recordarme" />
+                <label for="Recordarme">Recordarme</label>
+            </div>
+            <div>
+                <a href="/Usuario/Registro">Olvidaste tu contraseña?</a>
+            </div>
+            
+        </div>
+        <button type="submit"
+                class="w-full bg-[#10243c] text-white p-3 rounded-lg font-semibold hover:bg-[#116a91] transition">
+            Ingresar
+        </button>
+    </form>
 
-    </div>
+    <div id="mensaje" class="text-center my-8 text-sm font-medium"></div>
+</div>
 
-        <div id="mensaje" class="text-center mt-4 text-sm font-medium"></div>
+
+
+
+
+
+@section Scripts {
     <script>
         const form = document.getElementById("loginForm");
         const mensaje = document.getElementById("mensaje");
 
         form.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const formData = new FormData(form);
-
+            mensaje.textContent = "";
+            form.querySelectorAll('span[data-for]').forEach(el => el.textContent = "");
+            const data = {
+                Username: form.querySelector('input[name="Username"]').value,
+                Password: form.querySelector('input[name="Password"]').value
+            };
 
             try {
-                const response = await fetch("/api/Usuario/Login", {
+                const response = await fetch("/api/UsuarioApi/Login", {
                     method: "POST",
-                    body: formData
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
                 });
 
                 const result = await response.json();
 
                 if (result.success) {
-                    @* mensaje.textContent = result.message; *@
                     mensaje.innerHTML = result.message;
-                    mensaje.className = "text-green-600 text-center mt-4";
+                    mensaje.className = "text-green-600 text-center mt-4 font-bold";
                 } else {
-                    @* mensaje.textContent = result.message; *@
-                    mensaje.innerHTML = result.message;
+                    mensaje.innerHTML = result.message || "Datos inválidos";
                     mensaje.className = "text-red-600 text-center mt-4";
+
+                    if (result.errors) {
+                        // 2. Mapear errores dinámicamente
+                        result.errors.forEach(err => {
+                            // Convertimos a minúsculas para comparar fácilmente
+                            const errorMsg = err.toLowerCase();
+                            
+                            if (errorMsg.includes("username") || errorMsg.includes("usuario")) {
+                                const span = form.querySelector('span[data-for="Username"]');
+                                if (span) span.textContent = err;
+                            }
+                            if (errorMsg.includes("password") || errorMsg.includes("contraseña")) {
+                                const span = form.querySelector('span[data-for="Password"]');
+                                if (span) span.textContent = err;
+                            }
+                        });
+                    }
                 }
 
             } catch (error) {
@@ -62,3 +109,4 @@
             }
         });
     </script>
+}
