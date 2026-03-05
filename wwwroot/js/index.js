@@ -12,17 +12,17 @@
             };
 
 
-            if (!userRegex.test(data.Username)) {
-                const span = form.querySelector('span[data-for="Username"]');
-                if (span) span.textContent = "Usuario inválido";
-                return;
-            }
+            // if (!userRegex.test(data.Username)) {
+            //     const span = form.querySelector('span[data-for="Username"]');
+            //     if (span) span.textContent = "Usuario inválido";
+            //     return;
+            // }
 
-            if (!passRegex.test(data.Password)) {
-                const span = form.querySelector('span[data-for="Password"]');
-                if (span) span.textContent = "Contraseña inválida";
-                return;
-            }
+            // if (!passRegex.test(data.Password)) {
+            //     const span = form.querySelector('span[data-for="Password"]');
+            //     if (span) span.textContent = "Contraseña inválida";
+            //     return;
+            // }
             try {
                 const response = await fetch("/api/UsuarioApi/Login", {
                     method: "POST",

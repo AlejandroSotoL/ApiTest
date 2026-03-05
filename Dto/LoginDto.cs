@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace api.Dto
 {
     public class LoginDto
-    {
+    {   
 
         [Required(ErrorMessage = "El usuario es requerido")]
         [StringLength(50, ErrorMessage = "El usuario no puede exceder los 50 caracteres")]
